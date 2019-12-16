@@ -21,6 +21,7 @@ public class JDABot extends ListenerAdapter {
     protected static int commandTimeout = 30;
     protected HashMap<String, HashMap<String, String>> commands = new HashMap<>();
     protected JDA jda;
+    protected HashMap<String, Object> storage = new HashMap<>();
 
     public JDABot() {
         registerCommand("help", HelpCommand.class);
@@ -51,7 +52,7 @@ public class JDABot extends ListenerAdapter {
     public void addTask(Class<? extends Task> task, long period) {
         Timer timer = new Timer();
         try {
-            timer.schedule(task.getDeclaredConstructor(JDA.class).newInstance(jda), 0, period);
+            timer.schedule(task.getDeclaredConstructor(JDABot.class).newInstance(this), 0, period);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
         }
@@ -91,6 +92,19 @@ public class JDABot extends ListenerAdapter {
 
     public void addCommandAlias(String alias, String command) {
         commands.putIfAbsent(alias, commands.get(command));
+    }
+
+
+    public JDA getJda() {
+        return jda;
+    }
+
+    public void setStorageValue(String key, Object value) {
+        storage.put(key, value);
+    }
+
+    public Object getStorageValue(String key) {
+        return storage.get(key);
     }
 
     @Override
