@@ -40,6 +40,12 @@ public class JDABot extends ListenerAdapter {
         }
     }
 
+    public void stop() {
+        if (!jda.equals(null)) {
+            jda.shutdown();
+        }
+    }
+
     public HashMap<String, HashMap<String, String>> getCommands() {
         return commands;
     }
