@@ -6,14 +6,12 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import ru.shalomander.jda_bot.base.Command;
+import ru.shalomander.jda_bot.base.Task;
 import ru.shalomander.jda_bot.commands.HelpCommand;
 
 import javax.security.auth.login.LoginException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class JDABot extends ListenerAdapter {
@@ -22,6 +20,7 @@ public class JDABot extends ListenerAdapter {
             commandPrefix = "!";
     protected static int commandTimeout = 30;
     protected HashMap<String, HashMap<String, String>> commands = new HashMap<>();
+    protected JDA jda;
 
     public JDABot() {
         registerCommand("help", HelpCommand.class);
@@ -29,7 +28,7 @@ public class JDABot extends ListenerAdapter {
 
     public void run() {
         try {
-            JDA jda = new JDABuilder(getToken())
+            jda = new JDABuilder(getToken())
                     .addEventListeners(this)
                     .build();
             jda.awaitReady();
@@ -47,6 +46,15 @@ public class JDABot extends ListenerAdapter {
     public JDABot setToken(String token) {
         this.token = token;
         return this;
+    }
+
+    public void addTask(Class<? extends Task> task, long period) {
+        Timer timer = new Timer();
+        try {
+            timer.schedule(task.getDeclaredConstructor(JDA.class).newInstance(jda), 0, period);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getToken() {
