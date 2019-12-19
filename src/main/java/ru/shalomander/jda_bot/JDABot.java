@@ -55,6 +55,10 @@ public class JDABot extends ListenerAdapter {
         return this;
     }
 
+    public String getToken() {
+        return token;
+    }
+
     public void addTask(Class<? extends Task> task, long period) {
         Timer timer = new Timer();
         try {
@@ -62,10 +66,6 @@ public class JDABot extends ListenerAdapter {
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
         }
-    }
-
-    public String getToken() {
-        return token;
     }
 
     public void setCommandTimeout(int timeout) {
@@ -109,8 +109,13 @@ public class JDABot extends ListenerAdapter {
         storage.put(key, value);
     }
 
+
+    public <T> Object getStorageValue(String key, T defaultValue) {
+        return storage.getOrDefault(key, defaultValue);
+    }
+
     public Object getStorageValue(String key) {
-        return storage.get(key);
+        return getStorageValue(key, new Object());
     }
 
     @Override

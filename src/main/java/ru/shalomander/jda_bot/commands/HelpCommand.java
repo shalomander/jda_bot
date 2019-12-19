@@ -1,9 +1,8 @@
 package ru.shalomander.jda_bot.commands;
 
-
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import ru.shalomander.jda_bot.JDABot;
 import ru.shalomander.jda_bot.base.Command;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ public class HelpCommand extends Command {
     protected void buildMessage() {
         HashMap<String, HashMap<String, String>> commands = jdaBot.getCommands();
         HashMap<String, ArrayList<String>> commandsReverse = new HashMap<>();
-        responseMessage.append("Доступные команды:\n");
+        message.append("Доступные команды:\n");
         commands.forEach((alias, command) -> {
             try {
                 Class<?> commandInstance = Class.forName(command.get("className"));
@@ -37,7 +36,7 @@ public class HelpCommand extends Command {
             }
         });
         commandsReverse.forEach((description, aliases) -> {
-            responseMessage.append(MessageFormat.format("*{0}* {1}\n", String.join(", ", aliases.toArray(new CharSequence[aliases.size()])), description));
+            message.append(MessageFormat.format("*{0}* {1}\n", String.join(", ", aliases.toArray(new CharSequence[aliases.size()])), description));
         });
     }
 }
