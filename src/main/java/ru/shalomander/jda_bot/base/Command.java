@@ -1,7 +1,7 @@
 package ru.shalomander.jda_bot.base;
 
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import ru.shalomander.jda_bot.JDABot;
 
@@ -12,7 +12,7 @@ import java.util.List;
 
 public abstract class Command implements Runnable {
     protected MessageReceivedEvent event;
-    protected TextChannel textChannel;
+    protected MessageChannel messageChannel;
     protected LinkedList<String> args;
     public static String description = "",
             argsDescription = "";
@@ -20,11 +20,11 @@ public abstract class Command implements Runnable {
     protected Message message;
 
     public Command(JDABot jdaBot, MessageReceivedEvent event, LinkedList<String> args) {
-        this.event = event;
-        this.textChannel = jdaBot.getJda().getTextChannelById(event.getChannel().getId());
-        this.args = args;
         this.jdaBot = jdaBot;
-        this.message=new Message(textChannel);
+        this.args = args;
+        this.event = event;
+        this.messageChannel = extractMessageChannel();
+        this.message = new Message(messageChannel);
     }
 
     final public void run() {
@@ -52,5 +52,20 @@ public abstract class Command implements Runnable {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public MessageChannel extractMessageChannel() {
+        MessageChannel messageChannel = null;
+        System.out.println(event.getChannelType().name());
+        switch (event.getChannelType().name()) {
+            case "PRIVATE":
+                System.out.println(event.getPrivateChannel().getId());
+                messageChannel = jdaBot.getJda().getPrivateChannelById(event.getPrivateChannel().getId());
+                break;
+            case "TEXT":
+                messageChannel = jdaBot.getJda().getTextChannelById(event.getTextChannel().getId());
+                break;
+        }
+        return messageChannel;
     }
 }

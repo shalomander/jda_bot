@@ -1,12 +1,12 @@
 package ru.shalomander.jda_bot.base;
 
 import com.google.common.base.Splitter;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.MessageChannel;
 
 import java.util.Arrays;
 
 public class Message {
-    protected TextChannel textChannel;
+    protected MessageChannel textChannel;
     protected StringBuilder stringBuilder;
     protected Iterable<String> message;
     public static final int MAX_LENGTH = 2000,
@@ -14,12 +14,12 @@ public class Message {
             CUT_MESSAGE = 1,
             CHUNK_MESSAGE = 2;
 
-    public Message(TextChannel textChannel, String message) {
+    public Message(MessageChannel textChannel, String message) {
         this.textChannel = textChannel;
         this.stringBuilder = new StringBuilder(message);
     }
 
-    public Message(TextChannel textChannel) {
+    public Message(MessageChannel textChannel) {
         this.textChannel = textChannel;
         this.stringBuilder = new StringBuilder("");
     }
@@ -30,6 +30,7 @@ public class Message {
 
     public void send(int oversizeAction) {
         chunkMessage(oversizeAction);
+        System.out.println(textChannel);
         message.forEach(chunk -> {
             textChannel.sendMessage(chunk).queue();
         });

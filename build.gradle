@@ -18,6 +18,6 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
 }
-version = '1.0'
+version = '1.0.1'
 compileJava.options.encoding = "UTF-8"
 compileTestJava.options.encoding = "UTF-8"
