@@ -23,8 +23,10 @@ public class JDABot extends ListenerAdapter {
     protected JDA jda;
     protected HashMap<String, Object> storage = new HashMap<>();
 
-    public JDABot() {
+    public JDABot(String token) {
+        setToken(token);
         registerCommand("help", HelpCommand.class);
+        run();
     }
 
     public void run() {
@@ -126,6 +128,7 @@ public class JDABot extends ListenerAdapter {
         if (msgRaw.startsWith(commandPrefix)) {
             LinkedList<String> args = new LinkedList<>();
             args.addAll(Arrays.asList(msgRaw.split("\\s+")));
+            System.out.println(args);
             String commandString = args.pollFirst().
                     replaceFirst(Pattern.quote(commandPrefix), "");
             try {

@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 
 public class JDABotTest {
     @Test public void testNewJDABot() {
-        JDABot jdaBot = new JDABot();
+        JDABot jdaBot = new JDABot("");
         assertTrue("jdaBot should be instance of JDABot class", jdaBot instanceof JDABot);
     }
 }
